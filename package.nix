@@ -46,8 +46,10 @@ stdenv.mkDerivation rec {
   pname = "windscribe";
   version = "2.21.7";
 
+arch = if stdenv.hostPlatform.system == "x86_64-linux" then "amd64" else "arm64";
+
   src = fetchurl {
-    url = "https://github.com/Windscribe/Desktop-App/releases/download/v${version}/windscribe_${version}_amd64.deb";
+    url = "https://github.com/Windscribe/Desktop-App/releases/download/v${version}/windscribe_${version}_${arch}.deb";
     hash = "sha256-ADzN5RH3hLcgvOW5Ix0n44cIslezrM9s1z8uum/Qd1c=";
   };
 
@@ -191,7 +193,7 @@ stdenv.mkDerivation rec {
     homepage = "https://windscribe.com";
     license = licenses.gpl2;
     sourceProvenance = [ sourceTypes.binaryNativeCode ];
-    platforms = [ "x86_64-linux" ];
+    platforms = ["x86_64-linux" "aarch64-linux"];
     mainProgram = "windscribe";
   };
 }

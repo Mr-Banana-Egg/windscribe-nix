@@ -6,14 +6,15 @@
   outputs =
     { self, nixpkgs }:
     let
-      system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
+      systems = [ "x86_64-linux" "aarch64-linux" ];
     in
-    {
-      packages.${system} = {
+   {
+     packages = nixpkgs.lib.genAttrs systems (system:
+        let pkgs = nixpkgs.legacyPackages.${system}; in
+        {
+
         windscribe = pkgs.callPackage ./package.nix { };
         default = self.packages.${system}.windscribe;
-      };
 
       overlays.default = final: _prev: {
         windscribe = final.callPackage ./package.nix { };
@@ -23,5 +24,8 @@
         windscribe = import ./module.nix;
         default = self.nixosModules.windscribe;
       };
-    };
+    }
+);
+};
+
 }
